@@ -7,7 +7,6 @@ import {Signup} from "./SignUp.tsx";
 export const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    // const [name, setName] = useState("");
     const navigate = useNavigate();
 
     const handleLogin = (e: React.FormEvent) => {
@@ -34,7 +33,7 @@ export const LoginPage = () => {
                     />                    <h1 className="text-4xl font-bold mb-2">Welcome to TimeBox</h1>
                     <p className="text-gray-600">
                         Don't have an account?{""}
-                        <a href="#" className="text-blue-600 hover:text-blue-700" onClick={Signup}>
+                        <a href="/signup" className="text-blue-600 hover:text-blue-700" onClick={Signup}>
                             Sign up
                         </a>
                     </p>
@@ -112,7 +111,7 @@ export const LoginPage = () => {
             <div className="hidden md:block flex-1">
                 <div className="h-screen ">
                     <img
-                        src="src/assets/image2.jpg" // Replace with your image path
+                        src="/src/assets/login.jpg" // Replace with your image path
                         alt="Illustration"
                         className="w-fit h-full object-cover p-4"
                     />

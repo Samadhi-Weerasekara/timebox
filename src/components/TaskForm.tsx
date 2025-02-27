@@ -1,152 +1,172 @@
-import { Plus } from "lucide-react";
-import { useState } from "react";
-import { Category, Priority, Status, Duration, Task } from "../models/Task.ts"; // Adjust the import path as needed
+import React, { useEffect, useState } from "react";
+import { X } from "lucide-react";
+import {Category, Duration, Priority, Status, Task} from "../models/Task.ts";
 
 interface TaskFormProps {
-    onAddTask: (newTask: Task) => void;
+    onClose: () => void;
+    onSave: (task: Task) => void;
+    editingTask: Task | null;
 }
 
-export const TaskForm = ({ onAddTask }: TaskFormProps) => {
-    const [isFormOpen, setIsFormOpen] = useState(false);
-    const [taskData, setTaskData] = useState<Omit<Task, "id" | "completed">>({
+export const TaskForm: React.FC<TaskFormProps> = ({ onClose, onSave, editingTask }) => {
+    const [task, setTask] = useState<Task>({
+        id: editingTask?.id || Date.now(),
         taskName: "",
         category: Category.WORK,
         priority: Priority.MEDIUM,
-        status: Status.PENDING,
+        status: Status.NOT_STARTED,
         duration: Duration.MINUTES_15,
-        dueDate: "",
+        dueDate: new Date().toISOString().split("T")[0],
         description: "",
+        completed: false,
     });
+
+    useEffect(() => {
+        if (editingTask) {
+            setTask({
+                ...editingTask,
+                dueDate: new Date(editingTask.dueDate).toISOString().split("T")[0],
+            });
+        }
+    }, [editingTask]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
-        // Generate a unique ID for the new task (for demo purposes)
-        const newTask: Task = {
-            ...taskData,
-            id: Date.now(), // Use timestamp as a simple unique ID
-            completed: false,
-        };
-
-        onAddTask(newTask);
-
-        // Reset form data
-        setTaskData({
-            taskName: "",
-            category: Category.WORK,
-            priority: Priority.MEDIUM,
-            status: Status.PENDING,
-            duration: Duration.MINUTES_15,
-            dueDate: "",
-            description: "",
-        });
-
-        // Close the form
-        setIsFormOpen(false);
+        onSave(task);
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-            <button
-                onClick={() => setIsFormOpen(!isFormOpen)}
-                className="flex items-center gap-2 text-blue-600 font-medium"
-            >
-                <Plus size={20} />
-                {isFormOpen ? "Close Form" : "Add New Task"}
-            </button>
-            {isFormOpen && (
-                <form
-                    onSubmit={handleSubmit}
-                    className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4"
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md relative">
+                <button
+                    onClick={onClose}
+                    className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
                 >
-                    <input
-                        type="text"
-                        placeholder="Task Name"
-                        value={taskData.taskName}
-                        onChange={(e) =>
-                            setTaskData({ ...taskData, taskName: e.target.value })
-                        }
-                        className="border p-2 rounded"
-                        required
-                    />
-                    <select
-                        value={taskData.category}
-                        onChange={(e) =>
-                            setTaskData({ ...taskData, category: e.target.value as Category })
-                        }
-                        className="border p-2 rounded"
-                    >
-                        {Object.values(Category).map((category) => (
-                            <option key={category} value={category}>
-                                {category}
-                            </option>
-                        ))}
-                    </select>
-                    <select
-                        value={taskData.priority}
-                        onChange={(e) =>
-                            setTaskData({ ...taskData, priority: e.target.value as Priority })
-                        }
-                        className="border p-2 rounded"
-                    >
-                        {Object.values(Priority).map((priority) => (
-                            <option key={priority} value={priority}>
-                                {priority}
-                            </option>
-                        ))}
-                    </select>
-                    <select
-                        value={taskData.status}
-                        onChange={(e) =>
-                            setTaskData({ ...taskData, status: e.target.value as Status })
-                        }
-                        className="border p-2 rounded"
-                    >
-                        {Object.values(Status).map((status) => (
-                            <option key={status} value={status}>
-                                {status}
-                            </option>
-                        ))}
-                    </select>
-                    <select
-                        value={taskData.duration}
-                        onChange={(e) =>
-                            setTaskData({ ...taskData, duration: e.target.value as Duration })
-                        }
-                        className="border p-2 rounded"
-                    >
-                        {Object.values(Duration).map((duration) => (
-                            <option key={duration} value={duration}>
-                                {duration}
-                            </option>
-                        ))}
-                    </select>
-                    <input
-                        type="date"
-                        value={taskData.dueDate}
-                        onChange={(e) =>
-                            setTaskData({ ...taskData, dueDate: e.target.value })
-                        }
-                        className="border p-2 rounded"
-                        required
-                    />
-                    <textarea
-                        placeholder="Description"
-                        value={taskData.description}
-                        onChange={(e) =>
-                            setTaskData({ ...taskData, description: e.target.value })
-                        }
-                        className="border p-2 rounded md:col-span-2"
-                        rows={3}
-                    />
-                    <button
-                        type="submit"
-                        className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 md:col-span-2"
-                    >
-                        Add Task
-                    </button>
+                    <X size={24} />
+                </button>
+                <h3 className="text-xl font-semibold mb-4">
+                    {editingTask ? "Edit Task" : "Add New Task"} ✏️
+                </h3>
+                <form onSubmit={handleSubmit}>
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                                Task Name
+                            </label>
+                            <input
+                                type="text"
+                                value={task.taskName}
+                                onChange={(e) => setTask({ ...task, taskName: e.target.value })}
+                                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
+                                required
+                                placeholder="Enter task name"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                                Category
+                            </label>
+                            <select
+                                value={task.category}
+                                onChange={(e) => setTask({ ...task, category: e.target.value as Category })}
+                                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
+                            >
+                                {Object.values(Category).map((cat) => (
+                                    <option key={cat} value={cat}>
+                                        {cat}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                                Priority
+                            </label>
+                            <select
+                                value={task.priority}
+                                onChange={(e) => setTask({ ...task, priority: e.target.value as Priority })}
+                                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
+                            >
+                                {Object.values(Priority).map((pri) => (
+                                    <option key={pri} value={pri}>
+                                        {pri}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                                Status
+                            </label>
+                            <select
+                                value={task.status}
+                                onChange={(e) => setTask({ ...task, status: e.target.value as Status })}
+                                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
+                            >
+                                {Object.values(Status).map((stat) => (
+                                    <option key={stat} value={stat}>
+                                        {stat}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                                Duration
+                            </label>
+                            <select
+                                value={task.duration}
+                                onChange={(e) => setTask({ ...task, duration: e.target.value as Duration })}
+                                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
+                            >
+                                {Object.values(Duration).map((dur) => (
+                                    <option key={dur} value={dur}>
+                                        {dur}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                                Due Date
+                            </label>
+                            <input
+                                type="date"
+                                value={task.dueDate}
+                                onChange={(e) => setTask({ ...task, dueDate: e.target.value })}
+                                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                                Description
+                            </label>
+                            <textarea
+                                value={task.description}
+                                onChange={(e) => setTask({ ...task, description: e.target.value })}
+                                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
+                                rows={3}
+                            />
+                        </div>
+                    </div>
+                    <div className="mt-6 flex justify-end">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="mr-3 px-4 py-2 text-gray-600 hover:text-gray-800"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="px-4 py-2 bg-purple-400 text-white rounded-md hover:bg-purple-500"
+                        >
+                            {editingTask ? "Update Task" : "Add Task"} ✨
+                        </button>
+                    </div>
                 </form>
-            )}
+            </div>
         </div>
     );
 };

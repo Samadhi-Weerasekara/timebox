@@ -1,18 +1,28 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Dashboard } from "./pages/Dashboard";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import {LoginPage} from "./pages/LoginPage.tsx";
 import {Signup} from "./pages/SignUp.tsx";
+import {Dashboard} from "./pages/Dashboard.tsx";
+import {Provider} from "react-redux";
+import {store} from "./store/Store.ts";
 
+export function App() {
+    const routes = createBrowserRouter([
+        {
+            path: '',
+            element : <LoginPage/>,
+            children : [
+                { path : '/signup', element : <Signup/>},
+                { path : '/dashboard', element : <Dashboard name={""} />}
 
-export const App = () => {
+            ]
+        },
+    ])
+
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<LoginPage />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/signup" element={<Signup />} />
-
-            </Routes>
-        </BrowserRouter>
+        <>
+            <Provider store={store}>
+                <RouterProvider router={routes} />
+            </Provider>
+        </>
     );
-};
+}

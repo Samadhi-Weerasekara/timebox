@@ -2,10 +2,12 @@ import { Mail, Lock, User } from "lucide-react"; // Import User icon for the nam
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 export const Signup = () => {
-    const [name, setName] = useState("");
+    // const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const navigate = useNavigate();
 
@@ -18,32 +20,40 @@ export const Signup = () => {
             return;
         }
 
+
         // Simulate a successful signup
         alert("Signup successful!");
-        navigate("/login"); // Navigate to the login page after successful signup
+        navigate("/"); // Navigate to the login page after successful signup
     };
 
     return (
         <div className="flex h-screen w-screen">
-            {/* Left side - Form */}
+
+            {/* left side - Image or Video */}
+            <div className="hidden md:block flex-1">
+                <div className="h-screen">
+                    <img
+                        src="src/assets/signIn-image.jpg" // Replace with your image path
+                        alt="Illustration"
+                        className="w-full h-full object-cover p-4"
+                    />
+                </div>
+            </div>
+
+            {/* right side - Form */}
             <div className="flex-1 p-14 mr-2 ml-2">
                 <div className="mb-4">
-                    <img
-                        src="src/assets/Time-removebg-preview.png" // Replace with your image path
-                        alt="logo"
-                        className="w-20 h-20 object-cover flex justify-center align-middle"
-                    />
                     <h1 className="text-4xl font-bold mb-2">Create an Account</h1>
                     <p className="text-gray-600">
                         Already have an account?{" "}
-                        <a href="/login" className="text-blue-600 hover:text-blue-700">
+                        <a href="/" className="text-blue-600 hover:text-blue-700">
                             Log in
                         </a>
                     </p>
                 </div>
                 <form className="space-y-6" onSubmit={handleSignup}>
                     {/* Name Field */}
-                    <div className="space-y-2">
+                    <div className="space-y-2 mr-2 ml-2">
                         <label className="block text-sm font-medium text-gray-700">
                             Name
                         </label>
@@ -125,23 +135,14 @@ export const Signup = () => {
                     {/* Signup Button */}
                     <button
                         type="submit"
-                        className="w-full bg-[#564C80] text-white py-2 px-4 rounded-lg hover:bg-[#3F314A] transition-colors"
+                        className="w-full bg-[#31313B] text-white py-2 px-4 rounded-lg hover:bg-[#3F314A] transition-colors"
                     >
                         Sign Up
                     </button>
                 </form>
             </div>
 
-            {/* Right side - Image or Video */}
-            <div className="hidden md:block flex-1">
-                <div className="h-screen">
-                    <img
-                        src="src/assets/log2.jpg" // Replace with your image path
-                        alt="Illustration"
-                        className="w-full h-full object-cover p-4"
-                    />
-                </div>
-            </div>
+
         </div>
     );
 };

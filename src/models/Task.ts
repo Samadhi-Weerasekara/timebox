@@ -12,28 +12,28 @@ export interface Task {
 }
 
 export enum Category {
-    WORK = "WORK",
-    PERSONAL = "PERSONAL",
-    STUDY = "STUDY",
-    SHOPPING = "SHOPPING",
-    HEALTH = "HEALTH",
+    WORK = "Work 💼",
+    PERSONAL = "Personal 🏠",
+    STUDY = "Study 📚",
+    SHOPPING = "Shopping 🛒",
+    HEALTH = "Health 🏥",
 }
 
 export enum Priority {
-    LOW = "LOW",
-    MEDIUM = "MEDIUM",
-    HIGH = "HIGH",
+    LOW = "Low 🟢",
+    MEDIUM = "Medium 🟡",
+    HIGH = "High 🔴",
 }
 
 export enum Status {
-    PENDING = "PENDING",
-    IN_PROGRESS = "IN_PROGRESS",
-    COMPLETED = "COMPLETED",
+    NOT_STARTED = "Not Started ⭕",
+    IN_PROGRESS = "In Progress 🔄",
+    COMPLETED = "Completed ✅",
 }
 
 export enum Duration {
-    MINUTES_15 = "15_MINUTES",
-    MINUTES_30 = "30_MINUTES",
-    HOUR_1 = "1_HOUR",
-    HOUR_2 = "2_HOURS",
+    MINUTES_15 = "15 minutes 🕛",
+    MINUTES_30 = "30 minutes 🕐",
+    HOUR_1 = "1 hour 🕑",
+    HOUR_2 = "2 hours 🕒",
 }
